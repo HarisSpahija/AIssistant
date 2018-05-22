@@ -15,13 +15,15 @@ import ai.api.model.Result;
 
 public class MainActivity extends AppCompatActivity implements AIListener{
     AIService aiService;
-    TextView textView;
+    TextView textAI;
+    TextView textClient;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        textView=findViewById(R.id.textView);
-        final AIConfiguration config = new AIConfiguration("6d138f04d3dc45b1bc15f81741b05da1",
+        textClient=findViewById(R.id.textClient);
+        textAI=findViewById(R.id.textAI);
+        final AIConfiguration config = new AIConfiguration("5d864df926f344eeb4a1055dac0624e9",
                 AIConfiguration.SupportedLanguages.English,
                 AIConfiguration.RecognitionEngine.System);
         aiService = AIService.getService(this, config);
@@ -37,7 +39,8 @@ public class MainActivity extends AppCompatActivity implements AIListener{
 
         Log.d("spahija", result.toString());
         Result result1 = result.getResult();
-        textView.setText(result1.getFulfillment().getSpeech());
+        textClient.setText(result1.getResolvedQuery());
+        textAI.setText(result1.getFulfillment().getSpeech());
     }
 
     @Override // here process error
