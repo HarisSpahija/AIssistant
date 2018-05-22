@@ -1,5 +1,6 @@
 package nl.spahija.dialogflow;
 
+import android.nfc.Tag;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,6 +25,9 @@ public class MainActivity extends AppCompatActivity implements AIListener {
     TextView textClient;
     private Button mButtonSpeak;
     private TextToSpeech ttsAI;
+    private static final String tagDialogFlow = "DialogFlow: ";
+    private static final String tagTextToSpeech = "TextToSpeech: ";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,12 +51,12 @@ public class MainActivity extends AppCompatActivity implements AIListener {
 
                     if (result == TextToSpeech.LANG_MISSING_DATA
                             || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                        Log.e("TTS", "Language not supported.");
+                        Log.e(tagTextToSpeech, "Language not supported.");
                     } else {
                         mButtonSpeak.setEnabled(true);
                     }
                 } else {
-                    Log.e("TTS", "Initialization failed.");
+                    Log.e(tagTextToSpeech, "Initialization failed.");
                 }
             }
         });
@@ -72,14 +76,15 @@ public class MainActivity extends AppCompatActivity implements AIListener {
     @Override // here process response
     public void onResult(AIResponse result) {
 
-        Log.d("spahija", result.toString());
+        Log.d(tagDialogFlow, result.toString());
         Result result1 = result.getResult();
         textClient.setText(result1.getResolvedQuery());
         textAI.setText(result1.getFulfillment().getSpeech());
+        speak();
     }
 
     private void speak() {
-        String text = "Hello, I am your virtual assistant.";/*textAI.getText().toString();*/
+        String text = textAI.getText().toString();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             ttsAI.speak(text,TextToSpeech.QUEUE_FLUSH,null,null);
         } else {
