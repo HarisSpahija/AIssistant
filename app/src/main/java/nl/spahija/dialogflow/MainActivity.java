@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements AIListener {
     }
 
     private void speak() {
-        String text = "Hello, I am your virtual assistant.";/*textAI.getText().toString();*/
+        String text = textAI.getText().toString();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             ttsAI.speak(text,TextToSpeech.QUEUE_FLUSH,null,null);
         } else {
