@@ -5,4 +5,10 @@
     <color name="colorAccent">#000000</color>
     <color name="colorButton">#000000</color>
     <color name="colorWhiteText">#ffffff</color>
+    <color name="colorBackground">#E5E5E5</color>
+
+    <color name="colorPurpleLight">#ad8adb</color>
+    <color name="colorPurpleDark">#660099</color>
+    <color name="colorOrange">#ff6600</color>
+
 </resources>

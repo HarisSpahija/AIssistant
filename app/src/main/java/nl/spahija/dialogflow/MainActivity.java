@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.speech.tts.TextToSpeech;
 
@@ -23,8 +24,11 @@ public class MainActivity extends AppCompatActivity implements AIListener {
     AIService aiService;
     TextView textAI;
     TextView textClient;
+    EditText editText;
+
     private Button mButtonSpeak;
     private TextToSpeech ttsAI;
+
     private static final String tagDialogFlow = "DialogFlow: ";
     private static final String tagTextToSpeech = "TextToSpeech: ";
 
@@ -33,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements AIListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        editText = findViewById(R.id.editText);
         textClient = findViewById(R.id.textClient);
         textAI = findViewById(R.id.textAI);
         final AIConfiguration config = new AIConfiguration("5d864df926f344eeb4a1055dac0624e9",
@@ -43,8 +48,14 @@ public class MainActivity extends AppCompatActivity implements AIListener {
 
         mButtonSpeak = findViewById(R.id.button_speak);
 
+        /**[ttsAI] create new Text to speech client.
+         *
+         */
         ttsAI = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
+            /**When the client gets initialized. Use context to set the string to text to speech
+             *
+             */
             public void onInit(int status) {
                 if (status == TextToSpeech.SUCCESS) {
                     int result = ttsAI.setLanguage(Locale.ENGLISH);
