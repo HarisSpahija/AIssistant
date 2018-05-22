@@ -59,4 +59,20 @@
         app:layout_constraintTop_toBottomOf="@+id/textClient"
         app:layout_constraintVertical_bias="0.083" />
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteX="932dp"
+        tools:layout_editor_absoluteY="0dp" />
+
+    <Button
+        android:id="@+id/button_speak"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:enabled="false"
+        android:text="Speak"
+        tools:layout_editor_absoluteX="129dp"
+        tools:layout_editor_absoluteY="395dp" />
+
 </android.support.constraint.ConstraintLayout>
