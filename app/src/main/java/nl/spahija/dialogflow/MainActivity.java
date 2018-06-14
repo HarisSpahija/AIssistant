@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements AIListener {
         /**[ttsAI] create new Text to speech client.
          *
          */
+        //Text to speech init
         ttsAI = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
             /**When the client gets initialized. Use context to set the string to text to speech
@@ -72,7 +73,8 @@ public class MainActivity extends AppCompatActivity implements AIListener {
             }
         });
 
-        mButtonSpeak.setOnClickListener(new View.OnClickListener() {
+        //Repeat speech on textAI press
+        textAI.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 speak();
@@ -80,10 +82,12 @@ public class MainActivity extends AppCompatActivity implements AIListener {
         });
     }
 
+    //START RECORDING
     public void buttonClicked(View view) {
         aiService.startListening();
     }
 
+    //RESPONSE RECEIVED
     @Override // here process response
     public void onResult(AIResponse result) {
 
@@ -94,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements AIListener {
         speak();
     }
 
+    //TEXT TO SPEECH FUNCTION
     private void speak() {
         String text = textAI.getText().toString();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
