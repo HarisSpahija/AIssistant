@@ -1,6 +1,6 @@
 package nl.spahija.dialogflow;
 
-import android.nfc.Tag;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,25 +8,36 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.TextToSpeech.OnInitListener;
 
 import java.util.Locale;
 
 import ai.api.AIListener;
+import ai.api.AIServiceException;
 import ai.api.android.AIConfiguration;
 import ai.api.android.AIService;
 import ai.api.model.AIError;
+import ai.api.model.AIRequest;
 import ai.api.model.AIResponse;
 import ai.api.model.Result;
 
 public class MainActivity extends AppCompatActivity implements AIListener {
+
     AIService aiService;
     TextView textAI;
     TextView textClient;
+    ImageView button_record;
+
+    //TODO: editText is not functional
     EditText editText;
 
+    public boolean recording = false;
     private Button mButtonSpeak;
+
+    //Text Box contains this ttsAI
     private TextToSpeech ttsAI;
 
     private static final String tagDialogFlow = "DialogFlow: ";
@@ -37,16 +48,17 @@ public class MainActivity extends AppCompatActivity implements AIListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         editText = findViewById(R.id.editText);
         textClient = findViewById(R.id.textClient);
         textAI = findViewById(R.id.textAI);
+        button_record = findViewById(R.id.button_record);
+
         final AIConfiguration config = new AIConfiguration("5d864df926f344eeb4a1055dac0624e9",
                 AIConfiguration.SupportedLanguages.English,
                 AIConfiguration.RecognitionEngine.System);
         aiService = AIService.getService(this, config);
         aiService.setListener(this);
-
-        mButtonSpeak = findViewById(R.id.button_speak);
 
         /**[ttsAI] create new Text to speech client.
          *
@@ -65,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements AIListener {
                             || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                         Log.e(tagTextToSpeech, "Language not supported.");
                     } else {
-                        mButtonSpeak.setEnabled(true);
+//                        mButtonSpeak.setEnabled(true);
                     }
                 } else {
                     Log.e(tagTextToSpeech, "Initialization failed.");
@@ -82,24 +94,21 @@ public class MainActivity extends AppCompatActivity implements AIListener {
         });
     }
 
-    //START RECORDING
-    public void buttonClicked(View view) {
-        aiService.startListening();
-    }
-
     //RESPONSE RECEIVED
     @Override // here process response
     public void onResult(AIResponse result) {
 
-        Log.d(tagDialogFlow, result.toString());
         Result result1 = result.getResult();
         textClient.setText(result1.getResolvedQuery());
         textAI.setText(result1.getFulfillment().getSpeech());
+
         speak();
+
     }
 
     //TEXT TO SPEECH FUNCTION
     private void speak() {
+        boolean checker = false;
         String text = textAI.getText().toString();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             ttsAI.speak(text,TextToSpeech.QUEUE_FLUSH,null,null);
@@ -120,15 +129,35 @@ public class MainActivity extends AppCompatActivity implements AIListener {
 
     @Override // indicate start listening here
     public void onListeningStarted() {
-
+        button_record.setImageResource(R.mipmap.logo_in);
+        recording = true;
     }
 
     @Override // indicate stop listening here
     public void onListeningCanceled() {
-
+        button_record.setImageResource(R.mipmap.logo_in);
+        recording = false;
     }
 
     @Override // indicate stop listening here
     public void onListeningFinished() {
+        button_record.setImageResource(R.mipmap.logo);
+        recording = false;
+    }
+
+    public void talkToAi(View view) {
+
+        if (recording) {
+            aiService.stopListening();
+        } else {
+            ttsAI.stop();
+            aiService.startListening();
+        }
+    }
+
+    //TODO: Debug text to AI
+    public void textToAi(View view) {
+        AIRequest aiRequest = new AIRequest();
+        aiRequest.setQuery(editText.getText().toString());
     }
 }
