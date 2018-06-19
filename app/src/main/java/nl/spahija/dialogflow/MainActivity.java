@@ -1,22 +1,26 @@
 package nl.spahija.dialogflow;
 
+
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.speech.tts.TextToSpeech;
-import android.speech.tts.TextToSpeech.OnInitListener;
+
 
 import java.util.Locale;
 
+import ai.api.AIDataService;
 import ai.api.AIListener;
 import ai.api.AIServiceException;
+import ai.api.RequestExtras;
 import ai.api.android.AIConfiguration;
 import ai.api.android.AIService;
 import ai.api.model.AIError;
@@ -35,7 +39,6 @@ public class MainActivity extends AppCompatActivity implements AIListener {
     EditText editText;
 
     public boolean recording = false;
-    private Button mButtonSpeak;
 
     //Text Box contains this ttsAI
     private TextToSpeech ttsAI;
@@ -111,13 +114,13 @@ public class MainActivity extends AppCompatActivity implements AIListener {
         boolean checker = false;
         String text = textAI.getText().toString();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ttsAI.speak(text,TextToSpeech.QUEUE_FLUSH,null,null);
+            ttsAI.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
         } else {
             ttsAI.speak(text, TextToSpeech.QUEUE_FLUSH, null);
         }
     }
 
-        @Override // here process error
+    @Override // here process error
     public void onError(AIError error) {
 
     }
@@ -157,7 +160,13 @@ public class MainActivity extends AppCompatActivity implements AIListener {
 
     //TODO: Debug text to AI
     public void textToAi(View view) {
-        AIRequest aiRequest = new AIRequest();
-        aiRequest.setQuery(editText.getText().toString());
+
+
+        clearEditText();
+    }
+
+
+    private void clearEditText() {
+        editText.getText().clear();
     }
 }
